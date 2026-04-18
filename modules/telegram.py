@@ -1,6 +1,10 @@
+import html
+import logging
 from datetime import datetime
 from typing import List, Dict, Optional
 from telegram import Bot
+
+logger = logging.getLogger(__name__)
 
 THAI_MONTHS = {
     1: "มกราคม", 2: "กุมภาพันธ์", 3: "มีนาคม", 4: "เมษายน",
@@ -27,9 +31,9 @@ def format_digest(articles: List[Dict], now: datetime) -> Optional[str]:
     ]
 
     for i, article in enumerate(articles, 1):
-        lines.append(f"\n<b>{i}. {article['title']}</b>")
-        lines.append(f"📌 สรุป: {article['summary']}")
-        lines.append(f"🔗 <a href=\"{article['url']}\">อ่านต้นฉบับ</a>")
+        lines.append(f"\n<b>{i}. {html.escape(article.get('title', ''))}</b>")
+        lines.append(f"📌 สรุป: {html.escape(article.get('summary', ''))}")
+        lines.append(f"🔗 <a href=\"{html.escape(article.get('url', ''), quote=False)}\">อ่านต้นฉบับ</a>")
 
     lines.append("\n━━━━━━━━━━━━━━━━━━")
     lines.append(f"รวม {len(articles)} ข่าว | ครั้งหน้า {next_time}")
@@ -39,9 +43,13 @@ def format_digest(articles: List[Dict], now: datetime) -> Optional[str]:
 
 async def send_digest(message: str, bot_token: str, chat_id: str):
     bot = Bot(token=bot_token)
-    await bot.send_message(
-        chat_id=chat_id,
-        text=message,
-        parse_mode="HTML",
-        disable_web_page_preview=True,
-    )
+    try:
+        await bot.send_message(
+            chat_id=chat_id,
+            text=message,
+            parse_mode="HTML",
+            disable_web_page_preview=True,
+        )
+    except Exception as e:
+        logger.error("Failed to send Telegram message: %s", e)
+        raise

@@ -40,6 +40,18 @@ def test_format_digest_empty_articles_returns_none():
     result = format_digest([], datetime(2026, 4, 18, 8, 0))
     assert result is None
 
+def test_format_digest_escapes_html_in_title():
+    articles = [{
+        "title": "<script>alert(1)</script>",
+        "url": "https://a.com/1",
+        "summary": "<b>injected</b>",
+        "source": "Test",
+    }]
+    msg = format_digest(articles, datetime(2026, 4, 18, 8, 0))
+    assert "<script>" not in msg
+    assert "&lt;script&gt;" in msg
+    assert "<b>injected</b>" not in msg
+
 @pytest.mark.asyncio
 async def test_send_digest_calls_telegram_api():
     with patch("modules.telegram.Bot") as MockBot:
