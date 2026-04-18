@@ -14,6 +14,14 @@ from modules.telegram import format_digest, send_digest
 
 load_dotenv()
 
+
+def _require_env(name: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        raise EnvironmentError(f"Required environment variable {name} is not set")
+    return value
+
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
@@ -28,6 +36,9 @@ def load_config(path: str = "config.yaml") -> dict:
 
 async def run_pipeline():
     config = load_config()
+    anthropic_key = _require_env("ANTHROPIC_API_KEY")
+    bot_token = _require_env("TELEGRAM_BOT_TOKEN")
+    chat_id = _require_env("TELEGRAM_CHAT_ID")
     db = Database()
     db.init()
 
@@ -39,7 +50,7 @@ async def run_pipeline():
             print("ไม่มีข่าวใหม่ในรอบนี้")
             return
 
-        client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        client = anthropic.Anthropic(api_key=anthropic_key)
         model = config["claude"]["model"]
         max_tokens = config["claude"]["max_tokens"]
 
@@ -47,7 +58,6 @@ async def run_pipeline():
         for article in new_articles:
             summary = summarize_article(article, client, model=model, max_tokens=max_tokens)
             if summary:
-                db.mark_sent(article["url"], article["title"])
                 summarized.append({**article, "summary": summary})
 
         if not summarized:
@@ -56,11 +66,9 @@ async def run_pipeline():
 
         message = format_digest(summarized, datetime.now())
         if message:
-            await send_digest(
-                message,
-                bot_token=os.getenv("TELEGRAM_BOT_TOKEN"),
-                chat_id=os.getenv("TELEGRAM_CHAT_ID"),
-            )
+            await send_digest(message, bot_token=bot_token, chat_id=chat_id)
+            for article in summarized:
+                db.mark_sent(article["url"], article["title"])
             print(f"ส่งข่าว {len(summarized)} ข่าวเข้า Telegram เรียบร้อย")
 
     finally:
