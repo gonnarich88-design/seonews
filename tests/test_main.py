@@ -2,7 +2,9 @@
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
 
-def test_run_pipeline_with_no_new_articles(capsys):
+
+@pytest.mark.asyncio
+async def test_run_pipeline_with_no_new_articles(capsys):
     with patch("main.fetch_articles", return_value=[]), \
          patch("main.filter_articles", return_value=[]), \
          patch("main.Database") as MockDB:
@@ -12,10 +14,11 @@ def test_run_pipeline_with_no_new_articles(capsys):
         mock_db.close = MagicMock()
 
         from main import run_pipeline
-        run_pipeline()
+        await run_pipeline()
 
         captured = capsys.readouterr()
         assert "ไม่มีข่าวใหม่" in captured.out
+
 
 @pytest.mark.asyncio
 async def test_run_pipeline_sends_when_articles_found():
@@ -40,6 +43,6 @@ async def test_run_pipeline_sends_when_articles_found():
         mock_db.close = MagicMock()
 
         from main import run_pipeline
-        run_pipeline()
+        await run_pipeline()
 
         mock_send.assert_called_once()

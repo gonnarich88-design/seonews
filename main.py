@@ -26,7 +26,7 @@ def load_config(path: str = "config.yaml") -> dict:
         return yaml.safe_load(f)
 
 
-def run_pipeline():
+async def run_pipeline():
     config = load_config()
     db = Database()
     db.init()
@@ -56,20 +56,11 @@ def run_pipeline():
 
         message = format_digest(summarized, datetime.now())
         if message:
-            coro = send_digest(
+            await send_digest(
                 message,
                 bot_token=os.getenv("TELEGRAM_BOT_TOKEN"),
                 chat_id=os.getenv("TELEGRAM_CHAT_ID"),
             )
-            try:
-                asyncio.get_running_loop()
-                # Already inside a running event loop (e.g. tests): run in new thread
-                import concurrent.futures
-                with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-                    future = pool.submit(asyncio.run, coro)
-                    future.result()
-            except RuntimeError:
-                asyncio.run(coro)
             print(f"ส่งข่าว {len(summarized)} ข่าวเข้า Telegram เรียบร้อย")
 
     finally:
@@ -77,4 +68,4 @@ def run_pipeline():
 
 
 if __name__ == "__main__":
-    run_pipeline()
+    asyncio.run(run_pipeline())
