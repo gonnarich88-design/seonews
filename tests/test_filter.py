@@ -47,3 +47,9 @@ def test_filter_removes_duplicate_in_batch(clean_db):
 def test_filter_returns_multiple_matches(clean_db):
     result = filter_articles([ARTICLES[0], ARTICLES[2]], KEYWORDS, clean_db)
     assert len(result) == 2
+
+def test_filter_matches_keyword_in_content(clean_db):
+    # keyword only in content, not in title
+    article = {"title": "Summer Tips", "url": "https://a.com/99", "content": "improve your seo today", "source": "MOZ"}
+    result = filter_articles([article], KEYWORDS, clean_db)
+    assert len(result) == 1

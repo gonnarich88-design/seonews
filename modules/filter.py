@@ -9,8 +9,8 @@ def filter_articles(articles: List[Dict], keywords: List[str], db: Database) -> 
         url = article["url"]
         if url in seen_urls or db.is_sent(url):
             continue
+        seen_urls.add(url)  # always mark as seen once URL passes dedup
         text = (article["title"] + " " + article["content"]).lower()
         if any(kw.lower() in text for kw in keywords):
-            seen_urls.add(url)
             result.append(article)
     return result
