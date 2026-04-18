@@ -26,11 +26,14 @@ def summarize_article(
             messages=[{
                 "role": "user",
                 "content": PROMPT_TEMPLATE.format(
-                    title=article["title"],
-                    content=article["content"][:2000],
+                    title=article.get("title", ""),
+                    content=article.get("content", "")[:2000],
                 )
             }]
         )
+        if not response.content:
+            logger.error("Empty response from Claude API for %s", article.get("url", "unknown"))
+            return ""
         return response.content[0].text.strip()
     except Exception as e:
         logger.error("Summarizer failed for %s: %s", article.get("url", "unknown"), e)
