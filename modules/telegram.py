@@ -41,15 +41,39 @@ def format_digest(articles: List[Dict], now: datetime) -> Optional[str]:
     return "\n".join(lines)
 
 
+TELEGRAM_MAX_LEN = 4096
+
+
+def _split_messages(message: str) -> List[str]:
+    if len(message) <= TELEGRAM_MAX_LEN:
+        return [message]
+
+    chunks = []
+    lines = message.split("\n")
+    current = ""
+    for line in lines:
+        candidate = current + line + "\n"
+        if len(candidate) > TELEGRAM_MAX_LEN:
+            if current:
+                chunks.append(current.rstrip())
+            current = line + "\n"
+        else:
+            current = candidate
+    if current:
+        chunks.append(current.rstrip())
+    return chunks
+
+
 async def send_digest(message: str, bot_token: str, chat_id: str):
     bot = Bot(token=bot_token)
-    try:
-        await bot.send_message(
-            chat_id=chat_id,
-            text=message,
-            parse_mode="HTML",
-            disable_web_page_preview=True,
-        )
-    except Exception as e:
-        logger.error("Failed to send Telegram message: %s", e)
-        raise
+    for chunk in _split_messages(message):
+        try:
+            await bot.send_message(
+                chat_id=chat_id,
+                text=chunk,
+                parse_mode="HTML",
+                disable_web_page_preview=True,
+            )
+        except Exception as e:
+            logger.error("Failed to send Telegram message: %s", e)
+            raise

@@ -1,9 +1,17 @@
+provider: openai  # claude หรือ openai
+
 claude:
   model: claude-haiku-4-5-20251001
   max_tokens: 500
 
+openai:
+  model: gpt-4o-mini
+  max_tokens: 500
+
 schedule:
-  hours: [2, 8, 14, 20]
+  hours: [8]  # วันละครั้ง 08:00 Bangkok time
+
+max_articles: 5  # ถ้าผ่านกรองเกินนี้ ให้ AI เลือก
 
 keywords:
   - google update

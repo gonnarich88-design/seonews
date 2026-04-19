@@ -3,6 +3,7 @@ import logging
 import os
 import yaml
 import anthropic
+import openai
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -36,23 +37,34 @@ def load_config(path: str = "config.yaml") -> dict:
 
 async def run_pipeline():
     config = load_config()
-    anthropic_key = _require_env("ANTHROPIC_API_KEY")
     bot_token = _require_env("TELEGRAM_BOT_TOKEN")
     chat_id = _require_env("TELEGRAM_CHAT_ID")
     db = Database()
     db.init()
 
     try:
+        provider = config.get("provider", "claude")
+        if provider == "openai":
+            openai_key = _require_env("OPENAI_API_KEY")
+            client = openai.OpenAI(api_key=openai_key)
+            model = config["openai"]["model"]
+            max_tokens = config["openai"]["max_tokens"]
+        else:
+            anthropic_key = _require_env("ANTHROPIC_API_KEY")
+            client = anthropic.Anthropic(api_key=anthropic_key)
+            model = config["claude"]["model"]
+            max_tokens = config["claude"]["max_tokens"]
+
+        max_articles = config.get("max_articles", 5)
         articles = fetch_articles(config["sources"])
-        new_articles = filter_articles(articles, config["keywords"], db)
+        new_articles = filter_articles(
+            articles, config["keywords"], db,
+            client=client, model=model, max_articles=max_articles,
+        )
 
         if not new_articles:
-            print("ไม่มีข่าวใหม่ในรอบนี้")
+            print("ไม่มีข่าวใหม่เมื่อวานนี้")
             return
-
-        client = anthropic.Anthropic(api_key=anthropic_key)
-        model = config["claude"]["model"]
-        max_tokens = config["claude"]["max_tokens"]
 
         summarized = []
         for article in new_articles:
