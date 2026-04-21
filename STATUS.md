@@ -11,8 +11,9 @@
 - [x] `main.py` — orchestrator รวมทุก module
 - [x] `tests/` — 25 unit tests ผ่านทั้งหมด
 - [x] `config.yaml` — RSS sources, keywords, Claude/OpenAI model config
-- [x] README.md — คู่มือการใช้งานครบ
+- [x] `README.md` — คู่มือการใช้งานครบ
 - [x] ทดสอบรันจริงสำเร็จ — ส่งข่าวเข้า Telegram ได้แล้ว
+- [x] ผูก GitHub repo: https://github.com/gonnarich88-design/seonews.git
 
 ## Logic การคัดข่าว (ปัจจุบัน)
 
@@ -26,7 +27,7 @@
 
 ## Config สำคัญ (config.yaml)
 
-- `provider: openai` — ใช้ OpenAI (เปลี่ยนเป็น `claude` เมื่อเติมเครดิต)
+- `provider: openai` — ใช้ OpenAI (เปลี่ยนเป็น `claude` เมื่อเติมเครดิต Anthropic)
 - `max_articles: 5` — จำนวนข่าวสูงสุดต่อวัน
 - `schedule.hours: [8]` — ส่งทุกวัน 08:00 (วันละครั้ง)
 
