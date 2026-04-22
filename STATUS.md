@@ -14,6 +14,8 @@
 - [x] `README.md` — คู่มือการใช้งานครบ
 - [x] ทดสอบรันจริงสำเร็จ — ส่งข่าวเข้า Telegram ได้แล้ว
 - [x] ผูก GitHub repo: https://github.com/gonnarich88-design/seonews.git
+- [x] `Dockerfile` + `.dockerignore` — deploy บน EasyPanel ด้วย cron 08:00 Bangkok time
+- [x] Deploy บน EasyPanel สำเร็จ (2026-04-23) — รันอัตโนมัติไม่ต้องกดเอง
 
 ## Logic การคัดข่าว (ปัจจุบัน)
 
@@ -33,18 +35,14 @@
 
 ## เหลือทำ
 
-- [ ] ตั้ง cron job ให้รันวันละครั้ง 08:00
-
-```bash
-crontab -e
-```
-
-เพิ่มบรรทัด:
-```
-0 8 * * * cd /Users/wolfy/works/seonews && /usr/bin/python3 main.py >> data/cron.log 2>&1
-```
-
 - [ ] เติม credit Anthropic แล้วเปลี่ยน `provider: claude` ใน config.yaml
+
+## Deployment
+
+- **Platform**: EasyPanel
+- **Build**: Dockerfile (cron 08:00 Bangkok time)
+- **Volume**: `/app/data` — เก็บ SQLite ป้องกันข้อมูลหายเมื่อ restart
+- **Log**: `tail -f /app/data/cron.log`
 
 ## ทดสอบ
 
