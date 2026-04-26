@@ -14,18 +14,22 @@
 - [x] `README.md` — คู่มือการใช้งานครบ
 - [x] ทดสอบรันจริงสำเร็จ — ส่งข่าวเข้า Telegram ได้แล้ว
 - [x] ผูก GitHub repo: https://github.com/gonnarich88-design/seonews.git
-- [x] `Dockerfile` + `.dockerignore` — deploy บน EasyPanel ด้วย cron 08:00 Bangkok time
+- [x] `Dockerfile` + `.dockerignore` + `entrypoint.sh` — deploy บน EasyPanel พร้อม env vars ส่งเข้า cron
 - [x] Deploy บน EasyPanel สำเร็จ (2026-04-23) — รันอัตโนมัติไม่ต้องกดเอง
+- [x] `config.yaml` — ปรับ keyword เป็น 19 คำ ครอบคลุม technical SEO, content, AI search
+- [x] `modules/telegram.py` — เพิ่ม hashtag classification (9 ประเภท) + แก้ข้อความ "ครั้งหน้า"
+- [x] `modules/db.py` — เพิ่ม cleanup_old() ลบ record เก่าเกิน 60 วัน
+- [x] `modules/summarizer.py` — ปรับ prompt ให้บอกผลกระทบ SEO + สิ่งที่ควรทำ
 
 ## Logic การคัดข่าว (ปัจจุบัน)
 
-1. ดึงข่าวจาก RSS 10 แหล่ง
+1. ดึงข่าวจาก RSS **9 แหล่ง** (ตัด HubSpot ออก)
 2. กรองเฉพาะข่าวที่ **published เมื่อวาน** (Bangkok time) — ข่าวที่ไม่มีวันที่ถูก skip
-3. กรอง keyword SEO
-4. ป้องกันข่าวซ้ำด้วย SQLite
+3. กรอง **19 keyword** SEO (google update, core web vitals, e-e-a-t, ai overview ฯลฯ)
+4. ป้องกันข่าวซ้ำด้วย SQLite (เก็บประวัติ 60 วัน)
 5. ถ้าผ่านกรอง ≤ 5 ข่าว → เอาหมด
 6. ถ้าผ่านกรองเกิน 5 → ให้ GPT เลือก 5 ข่าวสำคัญสุด (ส่งแค่หัวข้อ ประหยัด token)
-7. สรุปเนื้อหาเป็นภาษาไทย → ส่ง Telegram
+7. สรุปเนื้อหาเป็นภาษาไทย (เกิดอะไร → ผลต่อ SEO → ควรทำอะไร) → ติด hashtag → ส่ง Telegram
 
 ## Config สำคัญ (config.yaml)
 
