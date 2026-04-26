@@ -56,3 +56,5 @@ sources:
     rss: https://www.semrush.com/blog/feed
   - name: Backlinko
     rss: https://backlinko.com/feed
+  - name: Neil Patel Blog
+    rss: https://neilpatel.com/blog/feed
