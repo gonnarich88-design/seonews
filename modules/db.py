@@ -33,6 +33,13 @@ class Database:
         )
         self.conn.commit()
 
+    def cleanup_old(self, days: int = 60):
+        self.conn.execute(
+            "DELETE FROM sent_articles WHERE sent_at < datetime('now', ?)",
+            (f"-{days} days",)
+        )
+        self.conn.commit()
+
     def close(self):
         if self.conn:
             self.conn.close()

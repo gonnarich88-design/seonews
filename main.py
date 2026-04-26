@@ -41,6 +41,7 @@ async def run_pipeline():
     chat_id = _require_env("TELEGRAM_CHAT_ID")
     db = Database()
     db.init()
+    db.cleanup_old(days=60)
 
     try:
         provider = config.get("provider", "claude")

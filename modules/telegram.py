@@ -12,8 +12,6 @@ THAI_MONTHS = {
     9: "กันยายน", 10: "ตุลาคม", 11: "พฤศจิกายน", 12: "ธันวาคม",
 }
 
-NEXT_HOUR = {2: 8, 8: 14, 14: 20, 20: 2}
-
 _HASHTAG_RULES = [
     ("#CoreUpdate",      ["core update"]),
     ("#AlgorithmUpdate", ["algorithm"]),
@@ -39,8 +37,6 @@ def format_digest(articles: List[Dict], now: datetime) -> Optional[str]:
         return None
 
     thai_date = f"{now.day} {THAI_MONTHS[now.month]} {now.year + 543} | {now.strftime('%H:%M')}"
-    next_hour = NEXT_HOUR.get(now.hour, (now.hour + 6) % 24)
-    next_time = f"{next_hour:02d}:00"
 
     lines = [
         "📰 <b>SEO News Digest</b>",
@@ -57,7 +53,7 @@ def format_digest(articles: List[Dict], now: datetime) -> Optional[str]:
         lines.append(f"🔗 <a href=\"{html.escape(article.get('url', ''), quote=False)}\">อ่านต้นฉบับ</a>")
 
     lines.append("\n━━━━━━━━━━━━━━━━━━")
-    lines.append(f"รวม {len(articles)} ข่าว | ครั้งหน้า {next_time}")
+    lines.append(f"รวม {len(articles)} ข่าว | ครั้งหน้าพรุ่งนี้ 08:00")
 
     return "\n".join(lines)
 
