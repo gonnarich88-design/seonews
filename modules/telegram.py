@@ -14,6 +14,25 @@ THAI_MONTHS = {
 
 NEXT_HOUR = {2: 8, 8: 14, 14: 20, 20: 2}
 
+_HASHTAG_RULES = [
+    ("#CoreUpdate",      ["core update"]),
+    ("#AlgorithmUpdate", ["algorithm"]),
+    ("#TechnicalSEO",    ["crawl", "index", "schema", "structured data", "core web vitals", "page speed", "technical seo"]),
+    ("#LinkBuilding",    ["backlink", "link building"]),
+    ("#ContentSEO",      ["helpful content", "e-e-a-t", "eeat"]),
+    ("#KeywordResearch", ["keyword research"]),
+    ("#SERPFeature",     ["featured snippet", "ai overview", "ai search", "serp"]),
+    ("#SearchConsole",   ["search console"]),
+]
+
+
+def _classify_hashtag(article: Dict) -> str:
+    text = (article.get("title", "") + " " + article.get("summary", "")).lower()
+    for tag, keywords in _HASHTAG_RULES:
+        if any(kw in text for kw in keywords):
+            return tag
+    return "#SEONews"
+
 
 def format_digest(articles: List[Dict], now: datetime) -> Optional[str]:
     if not articles:
@@ -31,7 +50,9 @@ def format_digest(articles: List[Dict], now: datetime) -> Optional[str]:
     ]
 
     for i, article in enumerate(articles, 1):
+        tag = _classify_hashtag(article)
         lines.append(f"\n<b>{i}. {html.escape(article.get('title', ''))}</b>")
+        lines.append(f"🏷 {tag}")
         lines.append(f"📌 สรุป: {html.escape(article.get('summary', ''))}")
         lines.append(f"🔗 <a href=\"{html.escape(article.get('url', ''), quote=False)}\">อ่านต้นฉบับ</a>")
 
