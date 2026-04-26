@@ -14,16 +14,30 @@ schedule:
 max_articles: 5  # ถ้าผ่านกรองเกินนี้ ให้ AI เลือก
 
 keywords:
+  # Google updates
   - google update
-  - algorithm
   - core update
-  - seo
+  - algorithm
+  # SEO fundamentals
   - ranking
-  - search engine
+  - keyword research
+  - link building
   - backlink
+  # Technical SEO
   - crawl
-  - index
   - serp
+  - structured data
+  - schema
+  - core web vitals
+  - page speed
+  - search console
+  # Content & quality
+  - helpful content
+  - e-e-a-t
+  - featured snippet
+  # AI & modern search
+  - ai overview
+  - ai search
 
 sources:
   - name: Search Engine Land
@@ -42,7 +56,3 @@ sources:
     rss: https://www.semrush.com/blog/feed
   - name: Backlinko
     rss: https://backlinko.com/feed
-  - name: Neil Patel Blog
-    rss: https://neilpatel.com/blog/feed
-  - name: HubSpot Marketing
-    rss: https://blog.hubspot.com/marketing/rss.xml
