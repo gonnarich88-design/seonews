@@ -17,10 +17,10 @@ COPY . .
 
 RUN mkdir -p /app/data
 
-# รันทุกวัน 08:00 Bangkok time (UTC+7)
+# รันทุกวัน 12:00 Bangkok time (UTC+7)
 # ใช้ /etc/environment เพื่อให้ cron อ่าน env vars ได้
 RUN echo "SHELL=/bin/sh" > /etc/cron.d/seonews && \
-    echo "0 8 * * * root . /etc/environment; cd /app && /usr/local/bin/python3 main.py >> /app/data/cron.log 2>&1" \
+    echo "0 12 * * * root . /etc/environment; cd /app && /usr/local/bin/python3 main.py >> /app/data/cron.log 2>&1" \
     >> /etc/cron.d/seonews && \
     chmod 0644 /etc/cron.d/seonews
 

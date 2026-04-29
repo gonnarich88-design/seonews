@@ -9,7 +9,7 @@ openai:
   max_tokens: 500
 
 schedule:
-  hours: [8]  # วันละครั้ง 08:00 Bangkok time
+  hours: [12]  # วันละครั้ง 12:00 Bangkok time
 
 max_articles: 5  # ถ้าผ่านกรองเกินนี้ ให้ AI เลือก
 

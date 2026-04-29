@@ -20,6 +20,7 @@
 - [x] `modules/telegram.py` — เพิ่ม hashtag classification (9 ประเภท) + แก้ข้อความ "ครั้งหน้า"
 - [x] `modules/db.py` — เพิ่ม cleanup_old() ลบ record เก่าเกิน 60 วัน
 - [x] `modules/summarizer.py` — ปรับ prompt ให้บอกผลกระทบ SEO + สิ่งที่ควรทำ
+- [x] สร้าง knowledge graph ด้วย graphify (`graphify-out/`) — 105 nodes, 155 edges, 11 communities
 
 ## Logic การคัดข่าว (ปัจจุบัน)
 
@@ -35,7 +36,7 @@
 
 - `provider: openai` — ใช้ OpenAI (เปลี่ยนเป็น `claude` เมื่อเติมเครดิต Anthropic)
 - `max_articles: 5` — จำนวนข่าวสูงสุดต่อวัน
-- `schedule.hours: [8]` — ส่งทุกวัน 08:00 (วันละครั้ง)
+- `schedule.hours: [12]` — ส่งทุกวัน 12:00 (วันละครั้ง)
 
 ## เหลือทำ
 
@@ -44,7 +45,7 @@
 ## Deployment
 
 - **Platform**: EasyPanel
-- **Build**: Dockerfile (cron 08:00 Bangkok time)
+- **Build**: Dockerfile (cron 12:00 Bangkok time)
 - **Volume**: `/app/data` — เก็บ SQLite ป้องกันข้อมูลหายเมื่อ restart
 - **Log**: `tail -f /app/data/cron.log`
 
