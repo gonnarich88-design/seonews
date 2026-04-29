@@ -21,6 +21,7 @@
 - [x] `modules/db.py` — เพิ่ม cleanup_old() ลบ record เก่าเกิน 60 วัน
 - [x] `modules/summarizer.py` — ปรับ prompt ให้บอกผลกระทบ SEO + สิ่งที่ควรทำ
 - [x] สร้าง knowledge graph ด้วย graphify (`graphify-out/`) — 105 nodes, 155 edges, 11 communities
+- [x] เปลี่ยนเวลาส่งจาก 08:00 เป็น 12:00 (`config.yaml` + `Dockerfile`)
 
 ## Logic การคัดข่าว (ปัจจุบัน)
 
